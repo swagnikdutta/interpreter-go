@@ -25,9 +25,25 @@ func (l *Lexer) NextToken() token.Token {
 
 	switch l.ch {
 	case '=':
-		tok = newToken(token.ASSIGN, l.ch)
+		if l.peekChar() == '=' {
+			ch := l.ch
+			l.readChar()
+			literal := string(ch) + string(l.ch)
+			// cannot use newToken() because, its second param is a byte/character, and literal is a string.
+			tok = token.Token{Type: token.EQ, Literal: literal}
+		} else {
+			tok = newToken(token.ASSIGN, l.ch)
+		}
 	case '!':
-		tok = newToken(token.BANG, l.ch)
+		if l.peekChar() == '=' {
+			ch := l.ch
+			l.readChar()
+			literal := string(ch) + string(l.ch)
+			// cannot use newToken() because, its second param is a byte/character, and literal is a string.
+			tok = token.Token{Type: token.NOT_EQ, Literal: literal}
+		} else {
+			tok = newToken(token.BANG, l.ch)
+		}
 	case '-':
 		tok = newToken(token.MINUS, l.ch)
 	case '*':
@@ -59,6 +75,8 @@ func (l *Lexer) NextToken() token.Token {
 		if isLetter(l.ch) {
 			// when l.ch is not one of the recognized characters, it might be an identifier
 			tok.Literal = l.readIdentifier()
+			// how do you know for sure that it's an identifier and not a keyword with special meaning? you don't.
+			// that's why we have this function — LookupIdent
 			tok.Type = token.LookupIdent(tok.Literal)
 			return tok // returning from here because we move the current pointer ahead by more than one step
 		} else if isDigit(l.ch) {
@@ -89,6 +107,22 @@ func (l *Lexer) readChar() {
 	}
 	l.position = l.readPosition
 	l.readPosition += 1
+}
+
+func (l *Lexer) peekChar() byte {
+	// we are trying to detect two-character tokens such as '==' and '!=', so we are trying to extend the cases for
+	// '=' and '!'. So we want to look ahead in the input and then determine whether to return a token for '=' or '=='
+
+	// difference between readChar() and peekChar() is that, we don't update l.position and l.readPosition in
+	// peekChar(). We just want to know what invoking readChar() would return next.
+
+	// The difficulty in parsing different languages often comes down to how far you have to peek ahead (or look back)
+	// in the source code to make sense of it.
+	if l.readPosition >= len(l.input) {
+		return 0
+	} else {
+		return l.input[l.readPosition]
+	}
 }
 
 func (l *Lexer) readIdentifier() string {
