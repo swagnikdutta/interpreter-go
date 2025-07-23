@@ -54,13 +54,13 @@ type LetStatement struct {
 func (ls *LetStatement) statementNode()       {}
 func (ls *LetStatement) TokenLiteral() string { return ls.Token.Literal }
 
-// Identifier — To hold an identifier in a binding, the x in `let x = 5`, we are using this Identifier struct type.
-// It implements the Expression interface, as it has implementations for expressionNode() and TokenLiteral().
+// Identifier — To hold an identifier in a binding, i.e, the x in `let x = 5`, we are using this Identifier struct type.
+// It implements the Expression interface, as you can see, it has implementations for expressionNode() and TokenLiteral().
 //
-// But an identifier in a let statement does not produce any value — while expressions do.
+// But an identifier in a let statement does not produce any value — while Expressions do.
 // Then why is it being treated as an Expression?
 // - To keep things simple.
-// - Because, identifiers in other parts of Monkey program do produce values `let x = valueProducingIdentifier` do produce values.
+// - Because, identifiers in other parts of Monkey program `let x = valueProducingIdentifier` do produce values.
 // - We want to reduce the number of different node types.
 type Identifier struct {
 	Token token.Token // the token.IDENT token
