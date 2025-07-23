@@ -2,6 +2,18 @@ package ast
 
 import "github.com/swagnikdutta/go-interpreter/token"
 
+// Node — Every node in our AST has to implement the node interface, meaning
+// it has to provide a TokenLiteral() method that returns the literal value
+// of the token it is associated with.
+//
+// The AST we are building consists solely of Nodes — that are connected to each
+// other (it's a tree after all). Some of these nodes implement the Statement
+// and some the Expression interface.
+//
+// Statement and Expression interfaces contain dummy methods — statementNode(),
+// and expressionNode() — which act as guiding constructs/safety checks — to
+// throw errors when we use a Statement where an Expression was required and
+// vice versa.
 type Node interface {
 	TokenLiteral() string
 }
@@ -16,12 +28,14 @@ type Expression interface {
 	expressionNode()
 }
 
+// Program — A program in Monkey is a series of statements.
+// Also note that, it implements TokenLiteral() below, which means Program is a Node.
 type Program struct {
+	// Statements are just a slice of AST Nodes that implement the Statement interface.
 	Statements []Statement
 }
 
-// This makes Program a type of Node
-// The program node is going to be the root node of every AST our parser produces.
+// TokenLiteral — The program node is going to be the root node in our AST.
 func (p *Program) TokenLiteral() string {
 	if len(p.Statements) > 0 {
 		return p.Statements[0].TokenLiteral()

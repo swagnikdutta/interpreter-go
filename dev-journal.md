@@ -1,0 +1,37 @@
+About parsers
+
+- Parsers take source code as input (either as text or tokens) and produces a data-structure which represents this source code. 
+- While building up the data structure, they unavoidably analyse the input, checking that it conforms to the expected structure. 
+- Thus, the process of parsing is also called syntactic analysis.
+- Parser generators
+  - They are tools that, when fed with a formal description of the language, produce parsers as their output. 
+  - Their output (a parser) is a code that can be compiled/interpreted and itself fed with a source code as input to produce a syntax tree.
+  - Majority of parser generators use a CFG as input. 
+
+- Programs in Monkey are series of statements. 
+- Let statements bind a value to a name
+- For now, we are only going to parse let statements — that binds value to identifier.
+  - We will skip parsing expressions that *produce* value
+  - We are going to create an AST that accurately represents information contained in a let statement.
+  - How to do that? 
+    - Take a close look at the let statements of Monkey source code and see how it's structured. 
+    - That will enable us to define necessary parts of an AST, that correctly represents let statements. 
+    - let statements have the following form — let <identifier> = <expression>
+    - Programs in Monkey are a series of statements. 
+- Statements vs Expressions
+  - Expressions produce value, Statements don't.
+  - `let x = 5` doesn't produce value.
+  - `5` does. The value it produces is 5.
+  - `return 5` doesn't produce value.
+  - `add(5, 5)` does
+- How would a node for a variable binding (or statement) of the form `let x = 5` look like?
+  - Which fields should it have?
+    - Definitely one for the name of the variable/identifier. 
+    - One field that points to the expression on the right hand side of the equal sign.
+      - Consider these example statements,
+        - `let x = 5 * 5`, 
+        - `let y = add(2, 2) * 5 / 10;`
+        - `let x = 5`
+      - So this field needs to be able to point to *any* expression. Simpler ones likes just `5`, as well as complex ones like `5 * 5` or `add(2, 2) * 5 / 10`.
+    - Then the node also needs to keep track of the token the AST node is associated with. So that we can implement the `TokenLiteral()` method.
+    - So 3 fields — one for the identifier, one for the expression that produces value, and one for the token.
