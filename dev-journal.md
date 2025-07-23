@@ -33,5 +33,5 @@ About parsers
         - `let y = add(2, 2) * 5 / 10;`
         - `let x = 5`
       - So this field needs to be able to point to *any* expression. Simpler ones likes just `5`, as well as complex ones like `5 * 5` or `add(2, 2) * 5 / 10`.
-    - Then the node also needs to keep track of the token the AST node is associated with. So that we can implement the `TokenLiteral()` method.
+    - Then the node also needs to keep track of the token (token.LET) the AST node is associated with. So that we can implement the `TokenLiteral()` method.
     - So 3 fields — one for the identifier, one for the expression that produces value, and one for the token.
