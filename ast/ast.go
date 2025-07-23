@@ -67,10 +67,5 @@ type Identifier struct {
 	Value string
 }
 
-// We are treating identifier as an expression. This might feel weird because,
-// the identifier in a let statement doesn't produce a value.
-// So why will it be an expression?
-// To keep things simple.
-// Besides, identifiers in other parts of a Monkey program do produce values: let x = valueProducingIdentifier
 func (i *Identifier) expressionNode()      {}
 func (i *Identifier) TokenLiteral() string { return i.Token.Literal }
