@@ -55,7 +55,8 @@ func (ls *LetStatement) statementNode()       {}
 func (ls *LetStatement) TokenLiteral() string { return ls.Token.Literal }
 
 // Identifier — To hold an identifier in a binding, i.e, the x in `let x = 5`, we are using this Identifier struct type.
-// It implements the Expression interface, as you can see, it has implementations for expressionNode() and TokenLiteral().
+// It implements the Expression interface, as you can see that it has implementations for expressionNode() and
+// TokenLiteral().
 //
 // But an identifier in a let statement does not produce any value — while Expressions do.
 // Then why is it being treated as an Expression?
