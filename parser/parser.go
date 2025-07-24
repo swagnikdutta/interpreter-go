@@ -30,8 +30,16 @@ func (p *Parser) nextToken() {
 	p.peekToken = p.l.NextToken()
 }
 
-// First thing parse program does is construct the root node of the AST — an *ast.Program (Recall that a Program is
-// a Node, see definition). It then iterates over every token in the input until it encounters a token.EOF.
+// ParseProgram is the entry point of the Parser. It constructs the root node of the AST — an *ast.Program (Recall that
+// a Program is a Node, see definition).
+//
+// It then iterates over every token in the input until it encounters a token.EOF — building child nodes, statements by
+// calling other functions — that know which AST node to construct based on the current token.
+//
+// These other functions call each other again, recursively. The parser repeatedly advances the tokens and checks the
+// current token to decide what to do next — either call another parsing function, or throw an error.
+// Each function then does its job and possibly constructs an AST node(statement) so that the main loop in ParseProgram
+// can advance the tokens and decide what to do again.
 func (p *Parser) ParseProgram() *ast.Program {
 	program := &ast.Program{}
 	program.Statements = []ast.Statement{}

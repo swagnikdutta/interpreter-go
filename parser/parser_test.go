@@ -14,13 +14,8 @@ let y = 10;
 let foobar = 838383;
 `
 	l := lexer.New(input)
-
-	// for tok := l.NextToken(); tok.Type != token.EOF; tok = l.NextToken() {
-	// 	fmt.Fprintf(os.Stdout, "%+v\n", tok)
-	// }
-	// return
-
 	p := New(l)
+
 	program := p.ParseProgram()
 	if program == nil {
 		t.Fatalf("ParseProgram() returned nil")
